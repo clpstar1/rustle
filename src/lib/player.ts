@@ -2,7 +2,7 @@ class Player {
 
     constructor(
         private ctx: AudioContext,
-        private oscMap = new Map<string, OscillatorNode | undefined>()
+        private oscMap = new Map<string, OscillatorNode | undefined>(),l
         ) {}
 
     public play = (freq: number, type: OscillatorType = "sine", ) => {
