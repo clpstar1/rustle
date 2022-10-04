@@ -1,68 +1,13 @@
+import ADSR from "./adsr"
 import { Globals } from "./globals"
+import SynthPiano from "./synthpiano"
 
-class ADSR {
-
-    constructor(
-        public attack = 0.05,
-        public decay = 0.3,
-        public sustain = 0.4,
-        public release = 0.6
-    ) {}
-
-
-    setAttack(attack: number) {
-        attack = attack
-        return this 
-    }
-
-    setRelease(release: number) {
-        release = release
-        return this
-    }
-}
-
-class OscKey {
-
-    private oscNode: OscillatorNode
-    private gainNode: GainNode
-    private adsr = new ADSR()
-    private vol = 1.0
-
-    constructor(
-        private ctx: BaseAudioContext,
-        private freq: number = 440,
-        private type: OscillatorType = "sine",
-    ) {
-        this.oscNode = new OscillatorNode(
-            this.ctx, {
-                type: this.type,
-                frequency: this.freq 
-            }
-        )
-        this.gainNode = new GainNode(this.ctx)
-        this.oscNode.connect(this.gainNode)
-        this.gainNode.connect(ctx.destination)
-    }
-
-    pressKey() {
-        this.gainNode.gain.setValueAtTime(0, this.ctx.currentTime)
-        this.gainNode.gain.linearRampToValueAtTime(this.vol, this.ctx.currentTime + this.adsr.attack)
-        this.oscNode.start()
-    }
-
-    releaseKey() {
-        this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, this.ctx.currentTime)
-        this.gainNode.gain.linearRampToValueAtTime(0, this.ctx.currentTime + this.adsr.release)
-        this.oscNode.stop(this.ctx.currentTime + this.adsr.release + 0.1)
-    }
-
-}
 
 class Player {
 
     constructor(
         private ctx: Globals,
-        private oscMap = new Map<string, OscKey | undefined>()
+        private oscMap = new Map<string, SynthPiano | undefined>()
         ) {}
 
     public play = (freq: number, type: OscillatorType = "sine", ) => {
@@ -72,10 +17,12 @@ class Player {
             return 
         }
 
-        const key = new OscKey(
+        const key = new SynthPiano(
             this.ctx.audioContext,
             freq,
             type
+        ).setADSR(
+            new ADSR(0.6, 0, 0, 0.6)
         )
         this.oscMap.set(k, key)
         key.pressKey()
