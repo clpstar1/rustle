@@ -1,5 +1,5 @@
 import ADSR from "./adsr"
-import { Globals } from "./globals"
+import Globals  from "./globals"
 import SynthPiano from "./synthpiano"
 
 
@@ -18,7 +18,7 @@ class Player {
         }
 
         const key = new SynthPiano(
-            this.ctx.audioContext,
+            this.ctx,
             freq,
             type
         ).setADSR(
