@@ -36,3 +36,33 @@
     transform: rotate(360deg);
   }
 }
+
+
+.wavepicker {
+  display: flex;
+  justify-content: center;
+  border: 2px solid black;
+  align-items: baseline;
+  width: 360px;
+}
+
+.wave-container {
+  display: flex;
+  justify-content: center;
+}
+
+.wavebox {
+  border: 2px solid black;
+  border-radius: 5px;
+  padding: 4px;
+  margin: 2px;
+}
+
+.wavebox-selected {
+  border: 2px solid blueviolet;
+}
+
+.wave {
+  width: 24px;
+  height: 24px;
+}
