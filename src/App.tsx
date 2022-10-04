@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { Globals } from './lib/globals';
+import Globals from "./lib/globals"
 import { pianoKeys } from './lib/keymap';
 import { getScale } from './lib/pitch';
 import { Player } from './lib/player';
@@ -9,12 +9,12 @@ import VolumeControl from './VolumeControl';
 
 function App() {
 
-
-  const [globals, setGlobals] = useState(new Globals())
-
-  const [player, _setPlayer] = useState(new Player(globals))
+  const [volume, setVolume] = useState(0.5)
+  const [globals, setGlobals] = useState(new Globals().setVolume(volume))
+  const [player, _setPlayer] = useState(new Player(globals)) 
   const [keys, _setKeys] = useState(new Map(zip(pianoKeys, getScale())))
 
+ 
   useEffect(() => {
 
     function handleKeyDown(ev: KeyboardEvent) {
@@ -43,7 +43,7 @@ function App() {
   return (
     <div className="App">
       <h1> Toy-Synth </h1>
-      <VolumeControl setGlobals={setGlobals}/>
+      <VolumeControl volume={volume} setVolume={setVolume} setGlobals={setGlobals}/>
     </div>
   );
 }
