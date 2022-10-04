@@ -1,10 +1,13 @@
+import ADSR from "./adsr"
 import { Globals } from "./globals"
+import SynthPiano from "./synthpiano"
+
 
 class Player {
 
     constructor(
         private ctx: Globals,
-        private oscMap = new Map<string, OscillatorNode | undefined>()
+        private oscMap = new Map<string, SynthPiano | undefined>()
         ) {}
 
     public play = (freq: number, type: OscillatorType = "sine", ) => {
@@ -14,21 +17,22 @@ class Player {
             return 
         }
 
-        const osc = new OscillatorNode(this.ctx.audioContext, {
-            type: type,
-            frequency: freq
-        })
-
-        this.oscMap.set(k, osc)
-
-        osc.connect(this.ctx.gainNode)
-        osc.start()
+        const key = new SynthPiano(
+            this.ctx.audioContext,
+            freq,
+            type
+        ).setADSR(
+            new ADSR(0.6, 0, 0, 0.6)
+        )
+        this.oscMap.set(k, key)
+        key.pressKey()
     } 
     
     public stop = (freq: number, type: OscillatorType) => {
         const k = this.key(freq, type)
-        const osc = this.oscMap.get(k)
-        this.oscMap.get(k)?.stop()
+        const key = this.oscMap.get(k)
+        if (!key) return 
+        key.releaseKey()
         this.oscMap.set(k, undefined)
     }
 
