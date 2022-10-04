@@ -1,11 +1,12 @@
 import React from "react"
-import Globals from "./lib/globals"
+import Globals from "../lib/globals"
+import { UseStateSetter } from "../lib/util"
 
 const VolumeControl = (
     props : { 
         volume: number,
-        setGlobals: React.Dispatch<React.SetStateAction<Globals>>
-        setVolume: React.Dispatch<React.SetStateAction<number>>
+        setGlobals: UseStateSetter<Globals>
+        setVolume: UseStateSetter<number>
     } ) => {
 
     const { volume, setGlobals, setVolume} = props 
@@ -18,7 +19,7 @@ const VolumeControl = (
 
     return (
         <div className="slidecontainer">
-            <h1>Volume Control</h1>
+            <h2>Volume Control</h2>
             <input type="range" min="0" max="100" value={volume * 100} onChange={updateVolume} className="slider"></input>
         </div>
     )
