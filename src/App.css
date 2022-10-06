@@ -66,3 +66,28 @@
   width: 24px;
   height: 24px;
 }
+
+.volume-container {
+  display: flex;
+  justify-content: center;
+  border: 2px solid black;
+  align-items: baseline;
+  width: 360px;
+}
+
+.volume-title {
+  margin: 2px;
+}
+
+.volume-input {
+  margin: 2px; 
+}
+
+.adsr-controls {
+  border: 2px solid black;
+  width: 360px; 
+}
+
+.adsr-header {
+  margin: 0px;
+}

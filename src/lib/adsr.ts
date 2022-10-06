@@ -1,20 +1,23 @@
+import Globals from "./globals"
+
 class ADSR {
 
     constructor(
         public attack = 0.05,
         public decay = 0.3,
         public sustain = 0.4,
-        public release = 0.6
-    ) {}
+        public release = 0.6, 
+    ) {
+    }
 
 
     setAttack(attack: number) {
-        attack = attack
+        this.attack = attack / 1000
         return this 
     }
 
     setRelease(release: number) {
-        release = release
+        this.release = release / 1000
         return this
     }
 }
