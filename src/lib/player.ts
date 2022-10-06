@@ -1,5 +1,5 @@
 import ADSR from "./adsr"
-import Gain from "./gain"
+import AmpEnvelope from "./envelope"
 import Globals  from "./globals"
 import SynthPiano from "./synthpiano"
 
@@ -18,16 +18,15 @@ class Player {
             return 
         }
 
-        const gain = new Gain(this.ctx, adsr)
+        const gain = new AmpEnvelope(this.ctx, adsr)
 
         const key = new SynthPiano(
             this.ctx,
-            adsr,
             gain,
             freq,
             type
         )
-        
+
         this.oscMap.set(k, key)
         key.pressKey()
     } 

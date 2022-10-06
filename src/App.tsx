@@ -50,19 +50,19 @@ function App() {
   return (
     <div className="App">
       <h1> Toy-Synth </h1>
-      <VBox margin="4px">
+      <VBox margin="8px">
         <Center>
           <VolumeControl volume={volume} setVolume={setVolume} setGlobals={setGlobals}/>
         </Center>
       </VBox>
       
-      <VBox margin="4px">
+      <VBox margin="8px">
         <Center>
           <WavePicker currentWave={wave} setWave={setWave} />
         </Center>
       </VBox>
 
-      <VBox margin="16px">
+      <VBox margin="8px">
         <Center>
           <ADSRControls adsr={adsr} setADSR={setADSR} />
         </Center>

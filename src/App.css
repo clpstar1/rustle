@@ -84,10 +84,19 @@
 }
 
 .adsr-controls {
+  width: 360px;
   border: 2px solid black;
-  width: 360px; 
 }
 
 .adsr-header {
   margin: 0px;
+}
+
+.adsr-slider {
+  display: block;
+}
+
+.adsr-param {
+  margin: 0px;
+  width: 60px;
 }
