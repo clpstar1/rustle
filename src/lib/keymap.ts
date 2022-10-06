@@ -11,4 +11,5 @@ export const pianoKeys = [
     "h",
     "u",
     "j",
+    "k"
 ]
