@@ -1,7 +1,6 @@
 import React from "react"
 import Globals from "../lib/globals"
 import { UseStateSetter } from "../lib/util"
-import Center from "./Center"
 
 const VolumeControl = (
     props: {
