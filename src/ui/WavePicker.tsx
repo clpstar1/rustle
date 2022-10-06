@@ -4,6 +4,7 @@ import saw from "../assets/saw.svg"
 import square from "../assets/square.svg"
 import React from "react"
 import { UseStateSetter } from "../lib/util"
+import Center from "./Center"
 
 
 const WavePicker = (
@@ -23,22 +24,21 @@ const WavePicker = (
     ]
 
     return (
-        <div style={{ display: "flex", justifyContent: "center" }}>
-            <div className="wavepicker">
-                <h2 style={{ margin: "16px" }}>Wavetype:</h2>
-                <div className="wave-container">
-                    {waves.map(([waveName, path]) => (
-                        <div className={
-                            currentWave !== waveName
-                                ? "wavebox"
-                                : "wavebox wavebox-selected"
-                        } onClick={() => setWave(waveName)}>
-                            <img className="wave" src={path}></img>
-                        </div>
-                    ))}
-                </div>
+        <div className="wavepicker">
+            <h2 style={{ margin: "16px" }}>Wavetype:</h2>
+            <div className="wave-container">
+                {waves.map(([waveName, path]) => (
+                    <div className={
+                        currentWave !== waveName
+                            ? "wavebox"
+                            : "wavebox wavebox-selected"
+                    } onClick={() => setWave(waveName)}>
+                        <img className="wave" src={path}></img>
+                    </div>
+                ))}
             </div>
         </div>
+
     )
 }
 

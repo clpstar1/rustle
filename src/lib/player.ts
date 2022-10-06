@@ -1,4 +1,5 @@
 import ADSR from "./adsr"
+import AmpEnvelope from "./envelope"
 import Globals  from "./globals"
 import SynthPiano from "./synthpiano"
 
@@ -10,20 +11,22 @@ class Player {
         private oscMap = new Map<string, SynthPiano | undefined>()
         ) {}
 
-    public play = (freq: number, type: OscillatorType = "sine", ) => {
+    public play = (adsr: ADSR, freq: number, type: OscillatorType = "sine") => {
         const k = this.key(freq, type)
 
         if (this.oscMap.get(k) !== undefined) {
             return 
         }
 
+        const gain = new AmpEnvelope(this.ctx, adsr)
+
         const key = new SynthPiano(
             this.ctx,
+            gain,
             freq,
             type
-        ).setADSR(
-            new ADSR(0.6, 0, 0, 0.6)
         )
+
         this.oscMap.set(k, key)
         key.pressKey()
     } 
