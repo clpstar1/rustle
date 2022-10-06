@@ -1,4 +1,3 @@
-import ADSR from "./adsr"
 
 class Globals {
 
