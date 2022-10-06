@@ -11,6 +11,8 @@ import Center from './ui/Center';
 import VBox from './ui/VBox';
 import VolumeControl from './ui/VolumeControl';
 import WavePicker from './ui/WavePicker';
+import pomu from "./assets/pom.png"
+
 
 function App() {
 
@@ -67,6 +69,11 @@ function App() {
           <ADSRControls adsr={adsr} setADSR={setADSR} />
         </Center>
       </VBox>
+
+      <a href='https://twitter.com/Ellem__/status/1572972388865953793' target="_blankg">
+        <img src={pomu} width="20%"></img>
+      </a>
+     
 
     </div>
   );
