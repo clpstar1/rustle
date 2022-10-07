@@ -100,3 +100,67 @@
   margin: 0px;
   width: 60px;
 }
+
+.notes {
+  width: 5%;
+  min-width: 100px;
+  height: 25%;
+  min-height: 250px;
+  position: absolute;
+  left: 25%;
+  z-index: 10;
+}
+
+.note {
+  position: absolute;
+  height: 20%;
+  min-height: 25px;
+  width: 20%;
+  min-width: 25px;
+  background-color: slateblue;
+
+  
+  opacity: 0;
+  animation: floating-note 10s infinite cubic-bezier(0.5, 0.5, 0.5, 0.5);
+  
+  mask-repeat: no-repeat;
+  mask-position: bottom;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 366.313 366.313' style='enable-background:new 0 0 366.313 366.313;' xml:space='preserve'%3E%3Cpath id='XMLID_526_' d='M113.156,61.11v188.63c-6.257-2.212-12.985-3.428-20-3.428c-33.137,0-60,26.863-60,60s26.863,60,60,60 s60-26.863,60-60v-174.8l140-40V199.74c-6.257-2.212-12.985-3.428-20-3.428c-33.137,0-60,26.863-60,60s26.863,60,60,60 s60-26.863,60-60V0L113.156,61.11z'/%3E%3C/svg%3E%0A");
+  mask-image: url("data:image/svg+xml,%3Csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 366.313 366.313' style='enable-background:new 0 0 366.313 366.313;' xml:space='preserve'%3E%3Cpath id='XMLID_526_' d='M113.156,61.11v188.63c-6.257-2.212-12.985-3.428-20-3.428c-33.137,0-60,26.863-60,60s26.863,60,60,60 s60-26.863,60-60v-174.8l140-40V199.74c-6.257-2.212-12.985-3.428-20-3.428c-33.137,0-60,26.863-60,60s26.863,60,60,60 s60-26.863,60-60V0L113.156,61.11z'/%3E%3C/svg%3E%0A");
+}
+
+@keyframes floating-note {
+  0% {
+    opacity: 0;
+    bottom: 0%;
+    left: 0%;
+  }
+  10% {
+    opacity: 1;
+    bottom: 20%;
+    left: 70%;
+  }
+  20% {
+    bottom: 40%;
+    left: 10%;
+  }
+  30% {
+    bottom: 60%;
+    left: 50%;
+  }
+  40% {
+    opacity: 1;
+    bottom: 80%;
+    left: 5%;
+  }
+  48% {
+    opacity: 0;
+    bottom: 100%;
+    left: 60%;
+  }
+  100% {
+    opacity: 0;
+    bottom: 100%;
+    left: 90%;
+  }
+};

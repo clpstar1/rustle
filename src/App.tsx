@@ -12,6 +12,7 @@ import VolumeControl from './ui/VolumeControl';
 import WavePicker from './ui/WavePicker';
 import pomu from "./assets/pom.png"
 import { getPitches } from './lib/pitch';
+import FloatingNotes from './ui/FloatingNotes';
 
 
 function App() {
@@ -91,6 +92,7 @@ function App() {
         <img src={pomu} width="300px"></img>
       </a>
      
+      <FloatingNotes></FloatingNotes>
 
     </div>
   );
