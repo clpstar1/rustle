@@ -100,3 +100,9 @@
   margin: 0px;
   width: 60px;
 }
+
+@media (orientation: portrait) {
+  .keymap {
+    display: none; 
+  }
+}

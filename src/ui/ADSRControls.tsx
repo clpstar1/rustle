@@ -11,10 +11,10 @@ const ADSRControls = (
     }) => {
 
     const { adsr, setADSR } = props
-    const [attack, setAttack] = useState(300)
-    const [release, setRelease] = useState(600)
+    const [attack, setAttack] = useState(200)
+    const [release, setRelease] = useState(200)
     
-    const PARAM_MAX = 3000
+    const PARAM_MAX = 2000
     const PARAM_MIN = 10 
 
     const updateAttack = (ev: React.ChangeEvent<HTMLInputElement>) => {
