@@ -38,6 +38,13 @@
 }
 
 
+@media (orientation: portrait) {
+  .hide-on-mobile {
+    display: none; 
+  }
+}
+
+
 .wavepicker {
   display: flex;
   justify-content: center;
@@ -101,13 +108,18 @@
   width: 60px;
 }
 
+.keymap {
+  width: 500px;
+}
+
+
 .notes {
-  width: 5%;
-  min-width: 100px;
+  width: 50px;
   height: 25%;
   min-height: 250px;
   position: absolute;
-  left: 25%;
+  right: 230px;
+  top: 90px;
   z-index: 10;
 }
 
@@ -119,9 +131,8 @@
   min-width: 25px;
   background-color: slateblue;
 
-  
   opacity: 0;
-  animation: floating-note 10s infinite cubic-bezier(0.5, 0.5, 0.5, 0.5);
+  animation: floating-note 5s cubic-bezier(0.5, 0.5, 0.5, 0.5);
   
   mask-repeat: no-repeat;
   mask-position: bottom;
@@ -133,34 +144,35 @@
   0% {
     opacity: 0;
     bottom: 0%;
-    left: 0%;
+    right: 0%;
   }
   10% {
     opacity: 1;
     bottom: 20%;
-    left: 70%;
+    right: 70%;
   }
   20% {
     bottom: 40%;
-    left: 10%;
+    right: 10%;
   }
   30% {
     bottom: 60%;
-    left: 50%;
+    right: 50%;
   }
   40% {
     opacity: 1;
     bottom: 80%;
-    left: 5%;
+    right: 5%;
   }
   48% {
     opacity: 0;
     bottom: 100%;
-    left: 60%;
+    right: 60%;
   }
   100% {
     opacity: 0;
     bottom: 100%;
-    left: 90%;
+    right: 90%;
   }
 };
+

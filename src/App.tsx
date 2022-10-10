@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import ADSR from './lib/adsr';
 import Globals from "./lib/globals"
@@ -10,24 +10,53 @@ import Center from './ui/Center';
 import VBox from './ui/VBox';
 import VolumeControl from './ui/VolumeControl';
 import WavePicker from './ui/WavePicker';
-import pomu from "./assets/pom.png"
 import keymap from "./assets/keys.png"
 import { getPitches } from './lib/pitch';
-import FloatingNotes from './ui/FloatingNotes';
-
+import momiji from "./assets/momiji-alpha.png"
 
 function App() {
 
-  const OCTAVE_MAX = 3 
+  const OCTAVE_MAX = 3
   const OCTAVE_MIN = -4
+  const FLOATING_NOTES_DURATION = 5000
 
   const [volume, setVolume] = useState(0.25)
   const [wave, setWave] = useState<OscillatorType>("sine")
   const [globals, setGlobals] = useState(new Globals().setVolume(volume))
   const [adsr, setADSR] = useState<ADSR>(new ADSR())
-  const [player, _setPlayer] = useState(new Player(globals)) 
+  const [player, _setPlayer] = useState(new Player(globals))
   const [octave, setOctave] = useState(0)
   const [keys, setKeys] = useState(new Map(zip(pianoKeys, getPitches(octave))))
+
+  const timer = useRef<number>(-1)
+  
+  function floatingNote() {
+
+    function createTimeOut(notes: Element) {
+      timer.current = window.setTimeout(() => {
+        if (notes) {
+          notes.replaceChildren(...[])
+          timer.current = -1
+        }
+      }, FLOATING_NOTES_DURATION)
+    }
+
+    const notes = document.querySelector("#notes")
+    const note = document.createElement("div")
+
+    note.setAttribute("class", "note")
+    notes?.appendChild(note)
+
+    if (notes) {
+      if (timer.current === -1) {
+        createTimeOut(notes)
+      } else {
+        window.clearTimeout(timer.current)
+        createTimeOut(notes)
+      }  
+    }
+
+  }
 
   useEffect(() => {
 
@@ -47,6 +76,9 @@ function App() {
 
       const freq = keys.get(ev.key)
       if (freq === undefined) return
+
+      floatingNote()
+
       player.play(adsr, freq, wave)
 
     }
@@ -56,9 +88,9 @@ function App() {
       if (freq === undefined) return
       player.stop(freq, wave)
     }
-  
+
     window.addEventListener("keydown", handleKeyDown)
-    window.addEventListener("keyup",  handleKeyUp)
+    window.addEventListener("keyup", handleKeyUp)
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown)
@@ -73,10 +105,10 @@ function App() {
       <h1> Rustle ~ Toy Synthesizer </h1>
       <VBox margin="8px">
         <Center>
-          <VolumeControl volume={volume} setVolume={setVolume} setGlobals={setGlobals}/>
+          <VolumeControl volume={volume} setVolume={setVolume} setGlobals={setGlobals} />
         </Center>
       </VBox>
-      
+
       <VBox margin="8px">
         <Center>
           <WavePicker currentWave={wave} setWave={setWave} />
@@ -93,8 +125,17 @@ function App() {
         <img src={pomu} width="300px"></img>
       </a> */}
 
-      <img src={keymap} className="keymap"/>
-
+      <div className="hide-on-mobile">
+        <img src={keymap} className="keymap"></img>
+        <img src={momiji} style={{ 
+          position: "absolute",
+          bottom: 128,
+          right: 36, 
+          width: 300 
+          }} />
+        <div id="notes" className="notes"></div>
+      </div>
+      
     </div>
   );
 }
