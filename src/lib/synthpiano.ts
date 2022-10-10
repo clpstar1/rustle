@@ -3,18 +3,16 @@
  * Gai
  */
 
-import ADSR from "./adsr"
 import AmpEnvelope from "./envelope"
 import Globals from "./globals"
 
-// TODO adsr volumes
 class SynthPiano {
 
     private oscNode: OscillatorNode
 
     constructor(
         globals: Globals,
-        private gain: AmpEnvelope,
+        private amp: AmpEnvelope,
         private freq: number = 440,
         private type: OscillatorType = "sine",
         private ctx = globals.audioContext
@@ -26,17 +24,17 @@ class SynthPiano {
             }
         )
         
-        this.oscNode.connect(this.gain.gainNode)
+        this.oscNode.connect(this.amp.gainNode)
     }
 
     pressKey() {
-        this.gain.pressKey()
+        this.amp.pressKey()
         this.oscNode.start()
     }
 
     releaseKey() {
-        this.gain.releaseKey()
-        this.oscNode.stop(this.ctx.currentTime + this.gain.adsr.release)
+        this.amp.releaseKey()
+        this.oscNode.stop(this.ctx.currentTime + this.amp.adsr.release)
     }
 }
 

@@ -9,7 +9,7 @@ export const getOctaves = () => {
 
 export const getPitches = (octave: number) => {
     const offset = (octave * 12) - 9
-    return Array.from(Array(13).keys()).map(
+    return Array.from(Array(15).keys()).map(
         (val) => Number(relativePitch(offset + val).toFixed(3))
     )
 }

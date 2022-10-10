@@ -11,6 +11,7 @@ import VBox from './ui/VBox';
 import VolumeControl from './ui/VolumeControl';
 import WavePicker from './ui/WavePicker';
 import pomu from "./assets/pom.png"
+import keymap from "./assets/keys.png"
 import { getPitches } from './lib/pitch';
 import FloatingNotes from './ui/FloatingNotes';
 
@@ -20,7 +21,7 @@ function App() {
   const OCTAVE_MAX = 3 
   const OCTAVE_MIN = -4
 
-  const [volume, setVolume] = useState(0.5)
+  const [volume, setVolume] = useState(0.25)
   const [wave, setWave] = useState<OscillatorType>("sine")
   const [globals, setGlobals] = useState(new Globals().setVolume(volume))
   const [adsr, setADSR] = useState<ADSR>(new ADSR())
@@ -88,11 +89,11 @@ function App() {
         </Center>
       </VBox>
 
-      <a href='https://twitter.com/Ellem__/status/1572972388865953793' target="_blankg">
+      {/* <a href='https://twitter.com/Ellem__/status/1572972388865953793' target="_blankg">
         <img src={pomu} width="300px"></img>
-      </a>
-     
-      <FloatingNotes></FloatingNotes>
+      </a> */}
+
+      <img src={keymap} className="keymap"/>
 
     </div>
   );
