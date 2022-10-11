@@ -15,7 +15,7 @@ const ADSRControls = (
     const [release, setRelease] = useState(200)
     
     const PARAM_MAX = 2000
-    const PARAM_MIN = 10 
+    const PARAM_MIN = 40 
 
     const updateAttack = (ev: React.ChangeEvent<HTMLInputElement>) => {
         const newAttack = paramAbs(ev.target.value)

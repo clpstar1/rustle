@@ -13,26 +13,42 @@ import WavePicker from './ui/WavePicker';
 import { getPitches } from './lib/pitch';
 import momiji from "./assets/momiji-alpha.png"
 import KeymapOverlay from './ui/KeymapOverlay';
+import NoteTracker from './lib/notetracker';
 
 function App() {
 
   const OCTAVE_MAX = 3
   const OCTAVE_MIN = -4
   const FLOATING_NOTES_DURATION = 3000
-  const NOTE_MAX = 16
+
+  const noteTrackerRef = useRef(new NoteTracker())
 
   const [volume, setVolume] = useState(0.25)
   const [wave, setWave] = useState<OscillatorType>("sine")
   const [globals, setGlobals] = useState(new Globals().setVolume(volume))
   const [adsr, setADSR] = useState<ADSR>(new ADSR())
-  const [player, _setPlayer] = useState(new Player(globals))
+  const [player, _setPlayer] = useState(new Player(globals, noteTrackerRef.current))
   const [octave, setOctave] = useState(0)
   const [keys, setKeys] = useState(new Map(zip(pianoKeys, getPitches(octave))))
 
   const timer = useRef<number>(-1)
   const noteCounter = useRef<number>(0)
+  
+  function createFloatingNote(notes: Element) {
 
-  function createFloatingNote() {
+    function createCounterTimeout() {
+      window.setTimeout(() => {
+        noteCounter.current -= 1
+      }, FLOATING_NOTES_DURATION)
+    }
+
+    const note = document.createElement("div")
+    note.setAttribute("class", "note")
+    notes?.appendChild(note)
+    createCounterTimeout()
+  }
+
+  function cleanupFloatingNotes(notes: Element) {
 
     function createClearTimeout(notes: Element) {
       timer.current = window.setTimeout(() => {
@@ -41,26 +57,6 @@ function App() {
           timer.current = -1
         }
       }, FLOATING_NOTES_DURATION)
-    }
-
-    function createCounterTimeout() {
-      window.setTimeout(() => {
-        noteCounter.current -= 1
-      }, FLOATING_NOTES_DURATION)
-    }
-
-    function appendNote() {
-      const note = document.createElement("div")
-      note.setAttribute("class", "note")
-      notes?.appendChild(note)
-      createCounterTimeout()
-    }
-
-    const notes = document.querySelector("#notes")
-    
-    if (noteCounter.current <= NOTE_MAX) {
-      appendNote()
-      noteCounter.current += 1
     }
 
     if (notes) {
@@ -93,7 +89,13 @@ function App() {
       const freq = keys.get(ev.key)
       if (freq === undefined) return
 
-      createFloatingNote()
+      const notes = document.querySelector("#notes")
+      if (notes) {
+        cleanupFloatingNotes(notes)
+        if (noteTrackerRef.current.get(freq, wave) === undefined){
+          createFloatingNote(notes)
+        }
+      }
 
       player.play(adsr, freq, wave)
 

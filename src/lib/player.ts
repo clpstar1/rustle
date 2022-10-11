@@ -1,6 +1,7 @@
 import ADSR from "./adsr"
 import AmpEnvelope from "./envelope"
 import Globals  from "./globals"
+import NoteTracker from "./notetracker"
 import SynthPiano from "./synthpiano"
 
 
@@ -8,13 +9,12 @@ class Player {
 
     constructor(
         private ctx: Globals,
-        private oscMap = new Map<string, SynthPiano | undefined>()
+        private noteTracker: NoteTracker
         ) {}
 
     public play = (adsr: ADSR, freq: number, type: OscillatorType = "sine") => {
-        const k = this.key(freq, type)
 
-        if (this.oscMap.get(k) !== undefined) {
+        if (this.noteTracker.get(freq, type) !== undefined) {
             return 
         }
 
@@ -27,19 +27,18 @@ class Player {
             type
         )
 
-        this.oscMap.set(k, key)
+        this.noteTracker.set(freq, type, key)
         key.pressKey()
     } 
     
     public stop = (freq: number, type: OscillatorType) => {
-        const k = this.key(freq, type)
-        const key = this.oscMap.get(k)
+
+        const key = this.noteTracker.get(freq, type)
         if (!key) return 
         key.releaseKey()
-        this.oscMap.set(k, undefined)
+        this.noteTracker.set(freq, type, undefined)
     }
 
-    private key = (freq: number, type: OscillatorType) => `${type}-${freq}`
 }
 
 
