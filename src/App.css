@@ -38,6 +38,8 @@
 }
 
 
+
+
 @media (orientation: portrait) {
   .hide-on-mobile {
     display: none; 
@@ -112,15 +114,42 @@
   width: 500px;
 }
 
+.footer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin: 8px;
+}
+
+#momiji {
+  width: 200px; 
+}
+
+.momiji-container {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  width: 360px;
+}
+
+#notes-container {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  width: 360px;
+  min-height: 200px;
+}
 
 .notes {
   width: 50px;
   height: 25%;
   min-height: 250px;
   position: absolute;
-  right: 230px;
-  top: 90px;
-  z-index: 10;
+  z-index: -1;
+
+  left: 25%;
+  bottom: 40%;
+
 }
 
 .note {

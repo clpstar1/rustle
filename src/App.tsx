@@ -29,7 +29,7 @@ function App() {
   const [keys, setKeys] = useState(new Map(zip(pianoKeys, getPitches(octave))))
 
   const timer = useRef<number>(-1)
-  
+
   function floatingNote() {
 
     function createTimeOut(notes: Element) {
@@ -53,7 +53,7 @@ function App() {
       } else {
         window.clearTimeout(timer.current)
         createTimeOut(notes)
-      }  
+      }
     }
 
   }
@@ -125,17 +125,18 @@ function App() {
         <img src={pomu} width="300px"></img>
       </a> */}
 
-      <div className="hide-on-mobile">
-        <img src={keymap} className="keymap"></img>
-        <img src={momiji} style={{ 
-          position: "absolute",
-          bottom: 128,
-          right: 36, 
-          width: 300 
-          }} />
-        <div id="notes" className="notes"></div>
+      <div className="footer">
+        {/* <img src={keymap} className="keymap"/> */}
+        <div className="momiji-container">
+          <img src={momiji} id="momiji" />
+        </div>
+
+        <div id="notes-container">
+          <div id="notes" className="notes"></div>
+        </div>
+
       </div>
-      
+
     </div>
   );
 }
