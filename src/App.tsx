@@ -10,17 +10,16 @@ import Center from './ui/Center';
 import VBox from './ui/VBox';
 import VolumeControl from './ui/VolumeControl';
 import WavePicker from './ui/WavePicker';
-import keymap from "./assets/keys.png"
 import { getPitches } from './lib/pitch';
 import momiji from "./assets/momiji-alpha.png"
-import HBox from './ui/HBox';
 import KeymapOverlay from './ui/KeymapOverlay';
 
 function App() {
 
   const OCTAVE_MAX = 3
   const OCTAVE_MIN = -4
-  const FLOATING_NOTES_DURATION = 5000
+  const FLOATING_NOTES_DURATION = 3000
+  const NOTE_MAX = 16
 
   const [volume, setVolume] = useState(0.25)
   const [wave, setWave] = useState<OscillatorType>("sine")
@@ -31,10 +30,11 @@ function App() {
   const [keys, setKeys] = useState(new Map(zip(pianoKeys, getPitches(octave))))
 
   const timer = useRef<number>(-1)
+  const noteCounter = useRef<number>(0)
 
-  function floatingNote() {
+  function createFloatingNote() {
 
-    function createTimeOut(notes: Element) {
+    function createClearTimeout(notes: Element) {
       timer.current = window.setTimeout(() => {
         if (notes) {
           notes.replaceChildren(...[])
@@ -43,18 +43,32 @@ function App() {
       }, FLOATING_NOTES_DURATION)
     }
 
-    const notes = document.querySelector("#notes")
-    const note = document.createElement("div")
+    function createCounterTimeout() {
+      window.setTimeout(() => {
+        noteCounter.current -= 1
+      }, FLOATING_NOTES_DURATION)
+    }
 
-    note.setAttribute("class", "note")
-    notes?.appendChild(note)
+    function appendNote() {
+      const note = document.createElement("div")
+      note.setAttribute("class", "note")
+      notes?.appendChild(note)
+      createCounterTimeout()
+    }
+
+    const notes = document.querySelector("#notes")
+    
+    if (noteCounter.current <= NOTE_MAX) {
+      appendNote()
+      noteCounter.current += 1
+    }
 
     if (notes) {
       if (timer.current === -1) {
-        createTimeOut(notes)
+        createClearTimeout(notes)
       } else {
         window.clearTimeout(timer.current)
-        createTimeOut(notes)
+        createClearTimeout(notes)
       }
     }
 
@@ -79,7 +93,7 @@ function App() {
       const freq = keys.get(ev.key)
       if (freq === undefined) return
 
-      floatingNote()
+      createFloatingNote()
 
       player.play(adsr, freq, wave)
 
@@ -124,7 +138,6 @@ function App() {
       </VBox>
 
       <KeymapOverlay/>
-
 
         <div className="footer">
           <div className="momiji-container">
