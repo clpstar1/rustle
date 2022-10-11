@@ -13,6 +13,8 @@ import WavePicker from './ui/WavePicker';
 import keymap from "./assets/keys.png"
 import { getPitches } from './lib/pitch';
 import momiji from "./assets/momiji-alpha.png"
+import HBox from './ui/HBox';
+import KeymapOverlay from './ui/KeymapOverlay';
 
 function App() {
 
@@ -102,13 +104,13 @@ function App() {
 
   return (
     <div className="App">
-      <h1> Rustle ~ Toy Synthesizer </h1>
+    
       <VBox margin="8px">
         <Center>
           <VolumeControl volume={volume} setVolume={setVolume} setGlobals={setGlobals} />
         </Center>
       </VBox>
-
+      
       <VBox margin="8px">
         <Center>
           <WavePicker currentWave={wave} setWave={setWave} />
@@ -121,21 +123,19 @@ function App() {
         </Center>
       </VBox>
 
-      {/* <a href='https://twitter.com/Ellem__/status/1572972388865953793' target="_blankg">
-        <img src={pomu} width="300px"></img>
-      </a> */}
+      <KeymapOverlay/>
 
-      <div className="footer">
-        {/* <img src={keymap} className="keymap"/> */}
-        <div className="momiji-container">
-          <img src={momiji} id="momiji" />
+
+        <div className="footer">
+          <div className="momiji-container">
+            <img src={momiji} id="momiji" />
+          </div>
+
+          <div id="notes-container">
+            <div id="notes" className="notes"></div>
+          </div>
+
         </div>
-
-        <div id="notes-container">
-          <div id="notes" className="notes"></div>
-        </div>
-
-      </div>
 
     </div>
   );
