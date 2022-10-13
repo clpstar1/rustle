@@ -25,27 +25,22 @@ function App() {
 
   const [volume, setVolume] = useState(0.25)
   const [wave, setWave] = useState<OscillatorType>("sine")
-  const [globals, setGlobals] = useState(new Globals().setVolume(volume))
   const [adsr, setADSR] = useState<ADSR>(new ADSR())
-  const [player, _setPlayer] = useState(new Player(globals, noteTrackerRef.current))
   const [octave, setOctave] = useState(0)
-  const [keys, setKeys] = useState(new Map(zip(pianoKeys, getPitches(octave))))
+  const [keys, setKeys] = useState(new Map(zip(pianoKeys, getPitches(0))))
+
+  const [globals, setGlobals] = useState(new Globals().setVolume(volume))
+  const [player, _setPlayer] = useState(new Player(globals, noteTrackerRef.current))
+
 
   const timer = useRef<number>(-1)
-  const noteCounter = useRef<number>(0)
-  
-  function createFloatingNote(notes: Element) {
 
-    function createCounterTimeout() {
-      window.setTimeout(() => {
-        noteCounter.current -= 1
-      }, FLOATING_NOTES_DURATION)
-    }
+  function createFloatingNote(notes: Element) {
 
     const note = document.createElement("div")
     note.setAttribute("class", "note")
     notes?.appendChild(note)
-    createCounterTimeout()
+
   }
 
   function cleanupFloatingNotes(notes: Element) {
