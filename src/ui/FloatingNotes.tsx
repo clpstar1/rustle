@@ -30,7 +30,11 @@ const FloatingNotes = (props: FloatingNotesProps) => {
 
         function handleKeydown(ev: KeyboardEvent) {
             const freq = keys.get(ev.key)
+            console.log(freq)
+      
             if (freq === undefined) return 
+
+            console.log(tracker.get(freq, wave))
             if (tracker.get(freq, wave) !== undefined) return 
             createFloatingNote()
         }

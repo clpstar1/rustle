@@ -18,8 +18,6 @@ import FloatingNotes from './ui/FloatingNotes';
 
 function App() {
 
-  const FLOATING_NOTES_DURATION = 3000
-
   const noteTrackerRef = useRef(new NoteTracker())
 
   const [volume, setVolume] = useState(0.25)
@@ -30,18 +28,6 @@ function App() {
 
   const [globals, setGlobals] = useState(new Globals().setVolume(volume))
   const [player, _setPlayer] = useState(new Player(globals, noteTrackerRef.current))
-
-  function createFloatingNote(notes: Element) {
-
-    const note = document.createElement("div")
-    note.setAttribute("class", "note")
-    notes?.appendChild(note)
-
-    window.setTimeout(() => {
-      note.remove()
-    }, FLOATING_NOTES_DURATION)
-
-  }
 
   useEffect(() => {
 
@@ -65,8 +51,6 @@ function App() {
 
         player.play(adsr, freq, wave)
       }
-      
-
     }
 
     function handleKeyUp(ev: KeyboardEvent) {
@@ -83,7 +67,7 @@ function App() {
       window.removeEventListener("keyup", handleKeyUp)
     }
 
-  }, [octave, wave, adsr, keys])
+  }, [octave, wave, adsr, keys, volume])
 
 
   return (
