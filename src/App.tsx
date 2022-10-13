@@ -11,10 +11,10 @@ import VBox from './ui/VBox';
 import VolumeControl from './ui/VolumeControl';
 import WavePicker from './ui/WavePicker';
 import { getPitches } from './lib/pitch';
-import momiji from "./assets/momiji-alpha.png"
 import KeymapOverlay from './ui/KeymapOverlay';
 import NoteTracker from './lib/notetracker';
 import { decrementOctave, incrementOctave } from './lib/octave';
+import FloatingNotes from './ui/FloatingNotes';
 
 function App() {
 
@@ -63,14 +63,6 @@ function App() {
         const freq = keys.get(ev.key)
         if (freq === undefined) return
 
-        const notes = document.querySelector("#notes")
-        if (
-          notes && 
-          noteTrackerRef.current.get(freq, wave) === undefined
-        ){
-          createFloatingNote(notes)
-        }
-
         player.play(adsr, freq, wave)
       }
       
@@ -117,16 +109,7 @@ function App() {
 
       <KeymapOverlay/>
 
-        <div className="footer">
-          <div className="momiji-container">
-            <img src={momiji} id="momiji" />
-          </div>
-
-          <div id="notes-container">
-            <div id="notes" className="notes"></div>
-          </div>
-
-        </div>
+      <FloatingNotes tracker={noteTrackerRef.current} wave={wave} keys={keys}/>
 
     </div>
   );
