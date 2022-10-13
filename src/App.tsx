@@ -14,11 +14,10 @@ import { getPitches } from './lib/pitch';
 import momiji from "./assets/momiji-alpha.png"
 import KeymapOverlay from './ui/KeymapOverlay';
 import NoteTracker from './lib/notetracker';
+import { decrementOctave, incrementOctave } from './lib/octave';
 
 function App() {
 
-  const OCTAVE_MAX = 3
-  const OCTAVE_MIN = -4
   const FLOATING_NOTES_DURATION = 3000
 
   const noteTrackerRef = useRef(new NoteTracker())
@@ -32,36 +31,15 @@ function App() {
   const [globals, setGlobals] = useState(new Globals().setVolume(volume))
   const [player, _setPlayer] = useState(new Player(globals, noteTrackerRef.current))
 
-
-  const timer = useRef<number>(-1)
-
   function createFloatingNote(notes: Element) {
 
     const note = document.createElement("div")
     note.setAttribute("class", "note")
     notes?.appendChild(note)
 
-  }
-
-  function cleanupFloatingNotes(notes: Element) {
-
-    function createClearTimeout(notes: Element) {
-      timer.current = window.setTimeout(() => {
-        if (notes) {
-          notes.replaceChildren(...[])
-          timer.current = -1
-        }
-      }, FLOATING_NOTES_DURATION)
-    }
-
-    if (notes) {
-      if (timer.current === -1) {
-        createClearTimeout(notes)
-      } else {
-        window.clearTimeout(timer.current)
-        createClearTimeout(notes)
-      }
-    }
+    window.setTimeout(() => {
+      note.remove()
+    }, FLOATING_NOTES_DURATION)
 
   }
 
@@ -70,29 +48,32 @@ function App() {
     function handleKeyDown(ev: KeyboardEvent) {
 
       if (ev.key === "x") {
-        const next = Math.min(OCTAVE_MAX, octave + 1)
+        const next = incrementOctave(octave)
         setOctave(next)
         setKeys(new Map(zip(pianoKeys, getPitches(next))))
       }
 
       if (ev.key === "y") {
-        const prev = Math.max(OCTAVE_MIN, octave - 1)
+        const prev = decrementOctave(octave)
         setOctave(prev)
         setKeys(new Map(zip(pianoKeys, getPitches(prev))))
       }
 
-      const freq = keys.get(ev.key)
-      if (freq === undefined) return
+      else {
+        const freq = keys.get(ev.key)
+        if (freq === undefined) return
 
-      const notes = document.querySelector("#notes")
-      if (notes) {
-        cleanupFloatingNotes(notes)
-        if (noteTrackerRef.current.get(freq, wave) === undefined){
+        const notes = document.querySelector("#notes")
+        if (
+          notes && 
+          noteTrackerRef.current.get(freq, wave) === undefined
+        ){
           createFloatingNote(notes)
         }
-      }
 
-      player.play(adsr, freq, wave)
+        player.play(adsr, freq, wave)
+      }
+      
 
     }
 
