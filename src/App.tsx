@@ -16,6 +16,8 @@ import NoteTracker from './lib/notetracker';
 import { decrementOctave, incrementOctave } from './lib/octave';
 import FloatingNotes from './ui/FloatingNotes';
 
+import { SynthPiano } from './lib/synthpiano';
+
 function App() {
 
   const noteTrackerRef = useRef(new NoteTracker())
@@ -26,8 +28,10 @@ function App() {
   const [octave, setOctave] = useState(0)
   const [keys, setKeys] = useState(new Map(zip(pianoKeys, getPitches(0))))
 
+
   const [globals, setGlobals] = useState(new Globals().setVolume(volume))
-  const [player, _setPlayer] = useState(new Player(globals, noteTrackerRef.current))
+  const [synth, _setSynth] = useState(new SynthPiano(globals, adsr))
+  const [player, _setPlayer] = useState(new Player(noteTrackerRef.current))
 
   useEffect(() => {
 
@@ -49,7 +53,9 @@ function App() {
         const freq = keys.get(ev.key)
         if (freq === undefined) return
 
-        player.play(adsr, freq, wave)
+        const key = synth.createKey(freq, wave)
+
+        player.play(key)
       }
     }
 

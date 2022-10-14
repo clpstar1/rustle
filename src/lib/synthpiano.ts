@@ -3,39 +3,50 @@
  * Gai
  */
 
+import ADSR from "./adsr"
 import AmpEnvelope from "./envelope"
 import Globals from "./globals"
 
-class SynthPiano {
-
-    private oscNode: OscillatorNode
+export class SynthPiano {
 
     constructor(
-        globals: Globals,
-        private amp: AmpEnvelope,
-        private freq: number = 440,
-        private type: OscillatorType = "sine",
+        private globals: Globals,
+        private adsr: ADSR,
         private ctx = globals.audioContext
-    ) {
-        this.oscNode = new OscillatorNode(
-            ctx, {
-                type: this.type,
-                frequency: this.freq 
+    ) {}
+
+    createKey(freq: number, wave: OscillatorType): SynthKey {
+        const amp = new AmpEnvelope(this.globals, this.adsr)
+        const osc = new OscillatorNode(
+            this.ctx, {
+                type: wave,
+                frequency: freq 
             }
         )
-        
-        this.oscNode.connect(this.amp.gainNode)
+        osc.connect(amp.gainNode)
+        return new SynthKey(this.ctx, amp, osc, freq, wave)
     }
 
-    pressKey() {
-        this.amp.pressKey()
-        this.oscNode.start()
-    }
-
-    releaseKey() {
-        this.amp.releaseKey()
-        this.oscNode.stop(this.ctx.currentTime + this.amp.adsr.release)
-    }
 }
 
-export default SynthPiano
+export class SynthKey {
+
+    constructor(
+        private ctx: BaseAudioContext,
+        private amp: AmpEnvelope,
+        private oscillator: OscillatorNode,
+        public freq: number,
+        public wave: OscillatorType
+    ) {}
+
+    play() {
+        this.amp.play()
+        this.oscillator.start()
+    }
+
+    release() {
+        this.amp.release()
+        this.oscillator.stop(this.ctx.currentTime + this.amp.adsr.release)
+    }
+
+}

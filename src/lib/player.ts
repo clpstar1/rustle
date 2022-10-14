@@ -1,41 +1,24 @@
-import ADSR from "./adsr"
-import AmpEnvelope from "./envelope"
-import Globals  from "./globals"
 import NoteTracker from "./notetracker"
-import SynthPiano from "./synthpiano"
+import { SynthKey } from "./synthpiano"
 
 
 class Player {
 
-    constructor(
-        private ctx: Globals,
-        private noteTracker: NoteTracker
-        ) {}
+    constructor(private noteTracker: NoteTracker) {}
 
-    public play = (adsr: ADSR, freq: number, type: OscillatorType = "sine") => {
-
-        if (this.noteTracker.get(freq, type) !== undefined) {
+    public play = (key: SynthKey) => {
+        if (this.noteTracker.get(key.freq, key.wave) !== undefined) {
             return 
         }
-
-        const gain = new AmpEnvelope(this.ctx, adsr)
-
-        const key = new SynthPiano(
-            this.ctx,
-            gain,
-            freq,
-            type
-        )
-
-        this.noteTracker.set(freq, type, key)
-        key.pressKey()
+        key.play()
+        this.noteTracker.set(key.freq, key.wave, key)
     } 
     
     public stop = (freq: number, type: OscillatorType) => {
-
         const key = this.noteTracker.get(freq, type)
         if (!key) return 
-        key.releaseKey()
+
+        key.release()
         this.noteTracker.set(freq, type, undefined)
     }
 

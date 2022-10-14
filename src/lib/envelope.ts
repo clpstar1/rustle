@@ -14,7 +14,7 @@ class AmpEnvelope {
         gainNode.connect(ctx.destination)
     }
 
-    pressKey() {
+    play() {
         const attackStart = this.ctx.currentTime
         const attackEnd = attackStart + this.adsr.attack
 
@@ -25,7 +25,7 @@ class AmpEnvelope {
         )
     }
 
-    releaseKey() {
+    release() {
         const oldGain = this.gainNode.gain.value
         this.gainNode.gain.cancelScheduledValues(this.ctx.currentTime)
 
