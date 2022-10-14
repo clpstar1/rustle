@@ -16,7 +16,7 @@ import NoteTracker from './lib/notetracker';
 import { decrementOctave, incrementOctave } from './lib/octave';
 import FloatingNotes from './ui/FloatingNotes';
 
-import { SynthPiano } from './lib/synthpiano';
+import { Synth } from './lib/synth';
 
 function App() {
 
@@ -30,7 +30,7 @@ function App() {
 
 
   const [globals, setGlobals] = useState(new Globals().setVolume(volume))
-  const [synth, _setSynth] = useState(new SynthPiano(globals, adsr))
+  const [synth, _setSynth] = useState(new Synth(globals, adsr))
   const [player, _setPlayer] = useState(new Player(noteTrackerRef.current))
 
   useEffect(() => {

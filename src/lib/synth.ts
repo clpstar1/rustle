@@ -7,7 +7,7 @@ import ADSR from "./adsr"
 import AmpEnvelope from "./envelope"
 import Globals from "./globals"
 
-export class SynthPiano {
+export class Synth {
 
     constructor(
         private globals: Globals,

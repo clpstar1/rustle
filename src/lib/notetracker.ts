@@ -1,4 +1,4 @@
-import { SynthKey } from "./synthpiano"
+import { SynthKey } from "./synth"
 
 
 class NoteTracker {

@@ -1,6 +1,5 @@
 import NoteTracker from "./notetracker"
-import { SynthKey } from "./synthpiano"
-
+import { SynthKey } from "./synth"
 
 class Player {
 
