@@ -101,6 +101,12 @@ function App() {
 
       <FloatingNotes tracker={noteTrackerRef.current} wave={wave} keys={keys}/>
 
+      <a 
+      href="https://github.com/clpstar1/rustle"
+      target="_blank"
+      style={{position: "absolute", left: "5%", bottom: "5%"}}
+      >Source</a>
+
     </div>
   );
 }
