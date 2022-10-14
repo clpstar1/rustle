@@ -54,6 +54,7 @@ function App() {
         if (freq === undefined) return
 
         const key = synth.createKey(freq, wave)
+        
 
         player.play(key)
       }

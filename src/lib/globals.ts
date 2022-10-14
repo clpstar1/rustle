@@ -2,7 +2,7 @@
 class Globals {
 
     constructor(
-        public audioContext: BaseAudioContext = new AudioContext(),
+        public audioContext: AudioContext = new AudioContext(),
         public volume: ConstantSourceNode = new ConstantSourceNode(audioContext)
     ) {}
 

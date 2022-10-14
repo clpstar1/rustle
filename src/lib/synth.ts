@@ -23,7 +23,7 @@ export class Synth {
                 frequency: freq 
             }
         )
-        osc.connect(amp.gainNode)
+        osc.connect(amp.ampGain)
         return new SynthKey(this.ctx, amp, osc, freq, wave)
     }
 
@@ -32,21 +32,21 @@ export class Synth {
 export class SynthKey {
 
     constructor(
-        private ctx: BaseAudioContext,
-        private amp: AmpEnvelope,
-        private oscillator: OscillatorNode,
+        public ctx: BaseAudioContext,
+        public amp: AmpEnvelope,
+        public osc: OscillatorNode,
         public freq: number,
         public wave: OscillatorType
     ) {}
 
     play() {
         this.amp.play()
-        this.oscillator.start()
+        this.osc.start()
     }
 
     release() {
         this.amp.release()
-        this.oscillator.stop(this.ctx.currentTime + this.amp.adsr.release)
+        this.osc.stop(this.ctx.currentTime + this.amp.adsr.release)
     }
 
 }
