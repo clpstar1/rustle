@@ -4,7 +4,7 @@
  */
 
 import ADSR from "./adsr"
-import AmpEnvelope from "./envelope"
+import AttackReleaseEnvelope from "./envelope"
 import Globals from "./globals"
 
 export class Synth {
@@ -16,15 +16,27 @@ export class Synth {
     ) {}
 
     createKey(freq: number, wave: OscillatorType): SynthKey {
-        const amp = new AmpEnvelope(this.globals, this.adsr)
+        const volume = this.globals.volume
+        const gain = this.globals.audioContext.createGain()
+
+        const envelope = new AttackReleaseEnvelope(
+            this.adsr, 
+            gain.gain, 
+            this.ctx, 
+            volume.offset.value
+        )
+
         const osc = new OscillatorNode(
             this.ctx, {
                 type: wave,
                 frequency: freq 
             }
         )
-        osc.connect(amp.ampGain)
-        return new SynthKey(this.ctx, amp, osc, freq, wave)
+
+        volume.connect(gain.gain)
+        gain.connect(this.ctx.destination)
+        osc.connect(gain)
+        return new SynthKey(this.ctx, envelope, osc, freq, wave)
     }
 
 }
@@ -33,14 +45,14 @@ export class SynthKey {
 
     constructor(
         public ctx: BaseAudioContext,
-        public amp: AmpEnvelope,
+        public amp: AttackReleaseEnvelope,
         public osc: OscillatorNode,
         public freq: number,
         public wave: OscillatorType
     ) {}
 
     play() {
-        this.amp.play()
+        this.amp.attack()
         this.osc.start()
     }
 
