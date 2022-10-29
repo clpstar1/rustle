@@ -16,7 +16,6 @@ class Player {
     public stop = (freq: number, type: OscillatorType) => {
         const key = this.noteTracker.get(freq, type)
         if (!key) return 
-
         key.release()
         this.noteTracker.set(freq, type, undefined)
     }
