@@ -14,7 +14,6 @@ const VolumeControl = (
     const updateVolume = (vol: React.ChangeEvent<HTMLInputElement>) => {
         const newVol = Number(vol.target.value)
         setVolume(newVol / 100)
-        setGlobals((previous) => previous.setVolume(newVol / 100))
     }
 
     return (

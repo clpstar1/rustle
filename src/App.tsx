@@ -29,7 +29,7 @@ function App() {
   const [keys, setKeys] = useState(new Map(zip(pianoKeys, getPitches(0))))
 
 
-  const [globals, setGlobals] = useState(new Globals().setVolume(volume))
+  const [globals, setGlobals] = useState(new Globals())
   const [synth, _setSynth] = useState(new Synth(globals, adsr))
   const [player, _setPlayer] = useState(new Player(noteTrackerRef.current))
 
@@ -53,7 +53,7 @@ function App() {
         const freq = keys.get(ev.key)
         if (freq === undefined) return
 
-        const key = synth.createKey(freq, wave)
+        const key = synth.createKey(freq, wave, volume)
         
 
         player.play(key)

@@ -16,15 +16,16 @@ export class Synth {
 		private ctx = globals.audioContext
 	) { }
 
-	createKey(freq: number, wave: OscillatorType): SynthKey {
-		const volume = this.globals.volume
+	createKey(freq: number, wave: OscillatorType, volume: number): SynthKey {
+		const volumeNode = this.globals.audioContext.createConstantSource()
+		volumeNode.offset.value = volume * 0.1
 		const gain = this.globals.audioContext.createGain()
 
 		const envelope = new AttackReleaseEnvelope(
 			this.adsr,
 			gain.gain,
 			this.ctx,
-			volume.offset.value
+			volumeNode.offset.value
 		)
 
 		const osc = new Oscillator(
@@ -37,7 +38,7 @@ export class Synth {
 			}), this.adsr
 		)
 
-		volume.connect(gain.gain)
+		volumeNode.connect(gain.gain)
 		gain.connect(this.ctx.destination)
 		osc.oscillator.connect(gain)
 
