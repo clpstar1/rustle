@@ -11,12 +11,19 @@ import VBox from './ui/VBox';
 import VolumeControl from './ui/VolumeControl';
 import WavePicker from './ui/WavePicker';
 import { getPitches } from './lib/pitch';
-import KeymapOverlay from './ui/KeymapOverlay';
 import NoteTracker from './lib/notetracker';
 import { decrementOctave, incrementOctave } from './lib/octave';
 import FloatingNotes from './ui/FloatingNotes';
 
 import { Synth } from './lib/synth';
+import Key from './ui/Key';
+
+interface KeyProps {
+  type: "note" | "unset" | "octave"
+  keyboard: string
+  note?: string
+  sharp?: boolean
+}
 
 function App() {
 
@@ -28,14 +35,92 @@ function App() {
   const [octave, setOctave] = useState(0)
   const [keys, setKeys] = useState(new Map(zip(pianoKeys, getPitches(0))))
 
-
   const [globals, setGlobals] = useState(new Globals())
-  const [synth, _setSynth] = useState(new Synth(globals, adsr))
-  const [player, _setPlayer] = useState(new Player(noteTrackerRef.current))
+  const [synth] = useState(new Synth(globals, adsr))
+  const [player] = useState(new Player(noteTrackerRef.current))
+  
+  const mkRow = (row: KeyProps[]) => row.map(key => {
+    var mousedown = () => {}
+    var mouseup = () => {}
+    const freq = keys.get(key.keyboard.toLowerCase())
+    if (freq) {
+      mousedown = () => {
+        if (freq === undefined) {
+          console.log(`warning ${key.note} has no associated pitch`)
+          return;
+        }
+        player.play(
+          synth.createKey(freq, wave, volume))
+      }
+      mouseup = () => {
+        player.stop(freq, wave)
+      }
+    }
+    if (key.type == "octave" && key.keyboard == "Y") {
+      mousedown = () => {
+        const next = decrementOctave(octave)
+        setOctave(next)
+        setKeys(new Map(zip(pianoKeys, getPitches(next))))
+      }
+    }
+    if (key.type == "octave" && key.keyboard == "X") {
+      mousedown = () => {
+        const next = incrementOctave(octave)
+        setOctave(next)
+        setKeys(new Map(zip(pianoKeys, getPitches(next))))
+      }
+    }
+
+    return <Key 
+      key={key.keyboard}
+      type={key.type} 
+      note={key.note} 
+      keyboard={key.keyboard} 
+      sharp={key.sharp}
+      mousedown={mousedown}
+      mouseup={mouseup}/>
+  })
+
+  const upperRow: KeyProps[] = [
+    { type: "unset", keyboard: "Q" },
+    { type: "note", keyboard: "W", note: "C", sharp: true },
+    { type: "note", keyboard: "E", note: "D", sharp: true },
+    { type: "unset", keyboard: "R" },
+    { type: "note", keyboard: "T", note: "F", sharp: true },
+    { type: "note", keyboard: "Z", note: "G", sharp: true },
+    { type: "note", keyboard: "U", note: "A", sharp: true },
+    { type: "unset", keyboard: "I" },
+    { type: "note", keyboard: "O", note: "C", sharp: true },
+    { type: "unset", keyboard: "P" },
+  ]
+  
+  const middleRow: KeyProps[] = [
+    { type: "note", keyboard: "A", note: "C", },
+    { type: "note", keyboard: "S", note: "D", },
+    { type: "note", keyboard: "D", note: "E", },
+    { type: "note", keyboard: "F", note: "F", },
+    { type: "note", keyboard: "G", note: "G", },
+    { type: "note", keyboard: "H", note: "A", },
+    { type: "note", keyboard: "J", note: "B", },
+    { type: "note", keyboard: "K", note: "C", },
+    { type: "note", keyboard: "L", note: "D", },
+  ]
+  
+  const bottomRow: KeyProps[] = [
+    { type: "octave", keyboard: "Y"},
+    { type: "octave", keyboard: "X"},
+    { type: "unset", keyboard: "C" },
+    { type: "unset", keyboard: "V" },
+    { type: "unset", keyboard: "B" },
+    { type: "unset", keyboard: "N" },
+    { type: "unset", keyboard: "M" },
+    { type: "unset", keyboard: "," },
+    { type: "unset", keyboard: "." },
+  ]
 
   useEffect(() => {
 
-    function handleKeyDown(ev: KeyboardEvent) {
+    async function handleKeyDown(ev: KeyboardEvent) {
 
       if (ev.key === "x") {
         const next = incrementOctave(octave)
@@ -52,10 +137,7 @@ function App() {
       else {
         const freq = keys.get(ev.key)
         if (freq === undefined) return
-
         const key = synth.createKey(freq, wave, volume)
-        
-
         player.play(key)
       }
     }
@@ -97,16 +179,30 @@ function App() {
           <ADSRControls adsr={adsr} setADSR={setADSR} />
         </Center>
       </VBox>
-
-      <KeymapOverlay/>
+      
+      <Center>
+        <div className='mykey-row'>
+          {mkRow(upperRow)}
+        </div>
+      </Center>
+      <Center>
+        <div className='mykey-row'>
+          {mkRow(middleRow)}
+        </div>
+      </Center>
+      <Center>
+        <div className='mykey-row' style={{paddingLeft: 32}}>
+          {mkRow(bottomRow)}
+        </div>
+      </Center>
 
       <FloatingNotes tracker={noteTrackerRef.current} wave={wave} keys={keys}/>
-
       <a 
       href="https://github.com/clpstar1/rustle"
       target="_blank"
       style={{position: "absolute", left: "5%", bottom: "5%"}}
       >Source</a>
+
 
     </div>
   );

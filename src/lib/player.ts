@@ -19,6 +19,13 @@ class Player {
         key.release()
         this.noteTracker.set(freq, type, undefined)
     }
+    
+    public stopAll = () => {
+        for (const key of this.noteTracker.oscMap.values()) {
+            key?.release()
+        }
+        this.noteTracker.oscMap = new Map()
+    }
 
 }
 

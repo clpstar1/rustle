@@ -28,11 +28,14 @@ const WavePicker = (
             <h2 style={{ margin: "16px" }}>Wavetype:</h2>
             <div className="wave-container">
                 {waves.map(([waveName, path]) => (
-                    <div className={
+                    <div 
+                        key={waveName}
+                        className={
                         currentWave !== waveName
                             ? "wavebox"
-                            : "wavebox wavebox-selected"
-                    } onClick={() => setWave(waveName)}>
+                            : "wavebox wavebox-selected"} 
+                        onClick={() => setWave(waveName)}
+                    >
                         <img className="wave" src={path}></img>
                     </div>
                 ))}
