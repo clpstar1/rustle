@@ -39,37 +39,51 @@ function App() {
   const [synth] = useState(new Synth(globals, adsr))
   const [player] = useState(new Player(noteTrackerRef.current))
   
+  const playKey = (note: string) => {
+    const freq = keys.get(note)
+    if (freq === undefined) return
+    const key = synth.createKey(freq, wave, volume)
+    player.play(key)
+  }
+  
+  const stopKey = (note: string) => {
+    const freq = keys.get(note)
+    if (freq === undefined) return
+    player.stop(freq, wave)
+  }
+  
+  const doDecrementOctave= () =>  {
+    const next = decrementOctave(octave)
+    setOctave(next)
+    setKeys(new Map(zip(pianoKeys, getPitches(next))))
+  }
+  
+  const doIncrementOctave = () => {
+    const next = incrementOctave(octave)
+    setOctave(next)
+    setKeys(new Map(zip(pianoKeys, getPitches(next))))
+  }
+  
   const mkRow = (row: KeyProps[]) => row.map(key => {
-    var mousedown = () => {}
-    var mouseup = () => {}
     
-    const freq = keys.get(key.keyboard.toLowerCase())
+    const note = key.keyboard.toLowerCase()
 
-    if (freq) {
-      mousedown = () => {
-        if (freq === undefined) {
-          console.log(`warning ${key.note} has no associated pitch`)
-          return;
-        }
-        player.play(synth.createKey(freq, wave, volume))
+    let mousedown = () => {
+        playKey(note)
         createFloatingNote()
-      }
-      mouseup = () => {
-        player.stop(freq, wave)
-      }
+    }
+    let mouseup = () => {
+        stopKey(note)
+      
     }
     if (key.type == "octave" && key.keyboard == "Y") {
       mousedown = () => {
-        const next = decrementOctave(octave)
-        setOctave(next)
-        setKeys(new Map(zip(pianoKeys, getPitches(next))))
+        doDecrementOctave()
       }
     }
     if (key.type == "octave" && key.keyboard == "X") {
       mousedown = () => {
-        const next = incrementOctave(octave)
-        setOctave(next)
-        setKeys(new Map(zip(pianoKeys, getPitches(next))))
+        doIncrementOctave()
       }
     }
 
@@ -125,29 +139,20 @@ function App() {
     async function handleKeyDown(ev: KeyboardEvent) {
 
       if (ev.key === "x") {
-        const next = incrementOctave(octave)
-        setOctave(next)
-        setKeys(new Map(zip(pianoKeys, getPitches(next))))
+        doIncrementOctave()
       }
 
       if (ev.key === "y") {
-        const prev = decrementOctave(octave)
-        setOctave(prev)
-        setKeys(new Map(zip(pianoKeys, getPitches(prev))))
+        doDecrementOctave()
       }
 
       else {
-        const freq = keys.get(ev.key)
-        if (freq === undefined) return
-        const key = synth.createKey(freq, wave, volume)
-        player.play(key)
+        playKey(ev.key)
       }
     }
 
     function handleKeyUp(ev: KeyboardEvent) {
-      const freq = keys.get(ev.key)
-      if (freq === undefined) return
-      player.stop(freq, wave)
+      stopKey(ev.key)
     }
 
     window.addEventListener("keydown", handleKeyDown)
