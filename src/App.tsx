@@ -4,7 +4,7 @@ import ADSR from './lib/adsr';
 import Globals from "./lib/globals"
 import { pianoKeys } from './lib/keymap';
 import { Player } from './lib/player';
-import { zip } from './lib/util';
+import { createFloatingNote, zip } from './lib/util';
 import ADSRControls from './ui/ADSRControls';
 import Center from './ui/Center';
 import VBox from './ui/VBox';
@@ -44,20 +44,6 @@ function App() {
     var mouseup = () => {}
     
     const freq = keys.get(key.keyboard.toLowerCase())
-    
-    const FLOATING_NOTES_DURATION = 3000
-
-    const createFloatingNote = () => {
-        const notes = document.querySelector("#notes")
-        if (notes === null) return
-        const note = document.createElement("div")
-        note.setAttribute("class", "note")
-        notes.appendChild(note)
-    
-        window.setTimeout(() => {
-          note.remove()
-        }, FLOATING_NOTES_DURATION)
-      }
 
     if (freq) {
       mousedown = () => {

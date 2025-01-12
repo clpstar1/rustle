@@ -1,6 +1,7 @@
 import { PropsWithChildren, useEffect } from "react"
 import momiji from "../assets/momiji.png"
 import NoteTracker from "../lib/notetracker"
+import { createFloatingNote } from "../lib/util"
 
 type FloatingNotesProps = {
     tracker: NoteTracker
@@ -10,29 +11,15 @@ type FloatingNotesProps = {
 
 const FloatingNotes = (props: FloatingNotesProps) => {
 
-    const FLOATING_NOTES_DURATION = 3000
 
     const { tracker, wave, keys } = props
 
-    const createFloatingNote = () => {
-        const notes = document.querySelector("#notes")
-        const note = document.createElement("div")
-        note.setAttribute("class", "note")
-        notes?.appendChild(note)
-    
-        window.setTimeout(() => {
-          note.remove()
-        }, FLOATING_NOTES_DURATION)
-    
-      }
 
     useEffect(() => {
 
         function handleKeydown(ev: KeyboardEvent) {
             const freq = keys.get(ev.key)
-            
             if (freq === undefined) return 
-
             if (tracker.get(freq, wave) !== undefined) return 
             createFloatingNote()
         }
