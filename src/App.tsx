@@ -42,15 +42,31 @@ function App() {
   const mkRow = (row: KeyProps[]) => row.map(key => {
     var mousedown = () => {}
     var mouseup = () => {}
+    
     const freq = keys.get(key.keyboard.toLowerCase())
+    
+    const FLOATING_NOTES_DURATION = 3000
+
+    const createFloatingNote = () => {
+        const notes = document.querySelector("#notes")
+        if (notes === null) return
+        const note = document.createElement("div")
+        note.setAttribute("class", "note")
+        notes.appendChild(note)
+    
+        window.setTimeout(() => {
+          note.remove()
+        }, FLOATING_NOTES_DURATION)
+      }
+
     if (freq) {
       mousedown = () => {
         if (freq === undefined) {
           console.log(`warning ${key.note} has no associated pitch`)
           return;
         }
-        player.play(
-          synth.createKey(freq, wave, volume))
+        player.play(synth.createKey(freq, wave, volume))
+        createFloatingNote()
       }
       mouseup = () => {
         player.stop(freq, wave)
@@ -75,7 +91,7 @@ function App() {
       key={key.keyboard}
       type={key.type} 
       note={key.note} 
-      keyboard={key.keyboard} 
+      keyboardKey={key.keyboard} 
       sharp={key.sharp}
       mousedown={mousedown}
       mouseup={mouseup}/>
@@ -198,9 +214,9 @@ function App() {
 
       <FloatingNotes tracker={noteTrackerRef.current} wave={wave} keys={keys}/>
       <a 
-      href="https://github.com/clpstar1/rustle"
-      target="_blank"
-      style={{position: "absolute", left: "5%", bottom: "5%"}}
+        href="https://github.com/clpstar1/rustle"
+        target="_blank"
+        style={{position: "absolute", left: "5%", bottom: "5%"}}
       >Source</a>
 
 

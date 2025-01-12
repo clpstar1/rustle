@@ -2,7 +2,7 @@ import ArrowUp from "../assets/arrow-up.svg"
 import ArrowDown from "../assets/arrow-down.svg"
 
 interface Props {
-    keyboard: string
+    keyboardKey: string
     note: string | undefined
     type: string 
     sharp: boolean | undefined
@@ -12,15 +12,18 @@ interface Props {
 
 export default function Key(props: Props) {
     
+    const onTouchStart = (ev:React.TouchEvent) => { ev.preventDefault(); props.mousedown()}
+    const onTouchEnd = (ev:React.TouchEvent) => { ev.preventDefault(); props.mouseup()}
+    
     if (props.type == "note") { return (
         <div 
             className="mykey-container" 
             onMouseDown={props.mousedown} 
             onMouseUp={props.mouseup}
-            onTouchStart={props.mousedown}
-            onTouchEnd={props.mouseup}
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
         >
-            <div className="mykey-upper">{props.keyboard}</div>
+            <div className="mykey-upper">{props.keyboardKey}</div>
             <div className="mykey-note">{props.note}</div>
             {props.sharp && <div className="mykey-sharp">{"#"}</div>}
         </div>
@@ -28,7 +31,7 @@ export default function Key(props: Props) {
     } else if (props.type == "unset") {
         return (
             <div className="mykey-container-unset">
-                <div className="mykey-upper">{props.keyboard}</div>
+                <div className="mykey-upper">{props.keyboardKey}</div>
             </div>
         )
     } else if (props.type == "octave") {
@@ -37,13 +40,13 @@ export default function Key(props: Props) {
                 className="mykey-container-octave"
                 onMouseDown={props.mousedown} 
                 onMouseUp={props.mouseup}
-                onTouchStart={props.mousedown}
-                onTouchEnd={props.mouseup}
+                onTouchStart={onTouchStart}
+                onTouchEnd={onTouchEnd}
             >
                 <div className="mykey-arrow">
-                    <img src={props.keyboard == "Y" ? ArrowDown : ArrowUp}></img>
+                    <img src={props.keyboardKey == "Y" ? ArrowDown : ArrowUp}></img>
                 </div>
-                <div className="mykey-upper">{props.keyboard}</div>
+                <div className="mykey-upper">{props.keyboardKey}</div>
             </div>)
     }
 
