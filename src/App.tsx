@@ -38,43 +38,43 @@ function App() {
   const [globals, setGlobals] = useState(new Globals())
   const [synth] = useState(new Synth(globals, adsr))
   const [player] = useState(new Player(noteTrackerRef.current))
-  
+
   const playKey = (note: string) => {
     const freq = keys.get(note)
     if (freq === undefined) return
     const key = synth.createKey(freq, wave, volume)
     player.play(key)
   }
-  
+
   const stopKey = (note: string) => {
     const freq = keys.get(note)
     if (freq === undefined) return
     player.stop(freq, wave)
   }
-  
-  const doDecrementOctave= () =>  {
+
+  const doDecrementOctave = () => {
     const next = decrementOctave(octave)
     setOctave(next)
     setKeys(new Map(zip(pianoKeys, getPitches(next))))
   }
-  
+
   const doIncrementOctave = () => {
     const next = incrementOctave(octave)
     setOctave(next)
     setKeys(new Map(zip(pianoKeys, getPitches(next))))
   }
-  
+
   const mkRow = (row: KeyProps[]) => row.map(key => {
-    
+
     const note = key.keyboard.toLowerCase()
 
     let mousedown = () => {
-        playKey(note)
-        createFloatingNote()
+      playKey(note)
+      createFloatingNote()
     }
     let mouseup = () => {
-        stopKey(note)
-      
+      stopKey(note)
+
     }
     if (key.type == "octave" && key.keyboard == "Y") {
       mousedown = () => {
@@ -87,14 +87,14 @@ function App() {
       }
     }
 
-    return <Key 
+    return <Key
       key={key.keyboard}
-      type={key.type} 
-      note={key.note} 
-      keyboardKey={key.keyboard} 
+      type={key.type}
+      note={key.note}
+      keyboardKey={key.keyboard}
       sharp={key.sharp}
       mousedown={mousedown}
-      mouseup={mouseup}/>
+      mouseup={mouseup} />
   })
 
   const upperRow: KeyProps[] = [
@@ -109,7 +109,7 @@ function App() {
     { type: "note", keyboard: "O", note: "C", sharp: true },
     { type: "unset", keyboard: "P" },
   ]
-  
+
   const middleRow: KeyProps[] = [
     { type: "note", keyboard: "A", note: "C", },
     { type: "note", keyboard: "S", note: "D", },
@@ -121,10 +121,10 @@ function App() {
     { type: "note", keyboard: "K", note: "C", },
     { type: "note", keyboard: "L", note: "D", },
   ]
-  
+
   const bottomRow: KeyProps[] = [
-    { type: "octave", keyboard: "Y"},
-    { type: "octave", keyboard: "X"},
+    { type: "octave", keyboard: "Y" },
+    { type: "octave", keyboard: "X" },
     { type: "unset", keyboard: "C" },
     { type: "unset", keyboard: "V" },
     { type: "unset", keyboard: "B" },
@@ -168,13 +168,13 @@ function App() {
 
   return (
     <div className="App">
-    
+
       <VBox margin="8px">
         <Center>
           <VolumeControl volume={volume} setVolume={setVolume} setGlobals={setGlobals} />
         </Center>
       </VBox>
-      
+
       <VBox margin="8px">
         <Center>
           <WavePicker currentWave={wave} setWave={setWave} />
@@ -186,7 +186,7 @@ function App() {
           <ADSRControls adsr={adsr} setADSR={setADSR} />
         </Center>
       </VBox>
-      
+
       <Center>
         <div className='mykey-row'>
           {mkRow(upperRow)}
@@ -198,18 +198,23 @@ function App() {
         </div>
       </Center>
       <Center>
-        <div className='mykey-row' style={{paddingLeft: 32}}>
+        <div className='mykey-row' style={{ paddingLeft: 32 }}>
           {mkRow(bottomRow)}
         </div>
       </Center>
 
-      <FloatingNotes tracker={noteTrackerRef.current} wave={wave} keys={keys}/>
-      <a 
+      <FloatingNotes tracker={noteTrackerRef.current} wave={wave} keys={keys} />
+      <a
         href="https://github.com/clpstar1/rustle"
         target="_blank"
-        style={{position: "absolute", left: "5%", bottom: "5%"}}
+        style={{ position: "absolute", left: "5%", bottom: "5%" }}
       >Source</a>
 
+      <a
+        href="https://www.youtube.com/watch?v=ArJe--CGatg"
+        target="_blank"
+        style={{ position: "absolute", left: "85%", bottom: "5%" }}
+      >Image by Daniel Renard</a>
 
     </div>
   );
