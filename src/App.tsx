@@ -168,7 +168,6 @@ function App() {
 
   return (
     <div className="App">
-
       <VBox margin="8px">
         <Center>
           <VolumeControl volume={volume} setVolume={setVolume} setGlobals={setGlobals} />

@@ -1,43 +1,50 @@
-# Rustle ~ A Toy Synthesizer 
+# React + TypeScript + Vite
 
-Rustle is a toy react project with the goal to explore the [WebAudio Api](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) by implementing a simple software synthesizer ui.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-(Planned) features include:
-- play notes with the keyboard
-- choose between simple waveforms
-- wrap the global volume into an adsr envelope
-- modulate parameters with a simple lfo 
-- apply a filter to the generated wave
+Currently, two official plugins are available:
 
-The project was created with `create-react-app`, for running locally see next sections.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-# Getting Started with Create React App
+## Expanding the ESLint configuration
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-## Available Scripts
+- Configure the top-level `parserOptions` property like this:
 
-In the project directory, you can run:
+```js
+export default tseslint.config({
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```
 
-### `npm start`
+- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
+- Optionally add `...tseslint.configs.stylisticTypeChecked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```js
+// eslint.config.js
+import react from 'eslint-plugin-react'
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+export default tseslint.config({
+  // Set the react version
+  settings: { react: { version: '18.3' } },
+  plugins: {
+    // Add the react plugin
+    react,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended rules
+    ...react.configs.recommended.rules,
+    ...react.configs['jsx-runtime'].rules,
+  },
+})
+```

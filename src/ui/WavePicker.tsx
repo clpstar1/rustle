@@ -2,9 +2,7 @@ import sine from "../assets/sine.svg"
 import triangle from "../assets/triangle.svg"
 import saw from "../assets/saw.svg"
 import square from "../assets/square.svg"
-import React from "react"
 import { UseStateSetter } from "../lib/util"
-import Center from "./Center"
 
 
 const WavePicker = (
@@ -28,12 +26,12 @@ const WavePicker = (
             <h2 style={{ margin: "16px" }}>Wavetype:</h2>
             <div className="wave-container">
                 {waves.map(([waveName, path]) => (
-                    <div 
+                    <div
                         key={waveName}
                         className={
-                        currentWave !== waveName
-                            ? "wavebox"
-                            : "wavebox wavebox-selected"} 
+                            currentWave !== waveName
+                                ? "wavebox"
+                                : "wavebox wavebox-selected"}
                         onClick={() => setWave(waveName)}
                     >
                         <img className="wave" src={path}></img>

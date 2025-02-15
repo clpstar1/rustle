@@ -9,7 +9,7 @@ const VolumeControl = (
         setVolume: UseStateSetter<number>
     }) => {
 
-    const { volume, setGlobals, setVolume } = props
+    const { volume, setVolume } = props
 
     const updateVolume = (vol: React.ChangeEvent<HTMLInputElement>) => {
         const newVol = Number(vol.target.value)
