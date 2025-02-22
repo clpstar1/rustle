@@ -1,222 +1,98 @@
-import { useEffect, useRef, useState } from 'react';
-import './App.css';
-import ADSR from './lib/adsr';
-import Globals from "./lib/globals"
-import { pianoKeys } from './lib/keymap';
-import { Player } from './lib/player';
-import { createFloatingNote, zip } from './lib/util';
-import ADSRControls from './ui/ADSRControls';
-import Center from './ui/Center';
-import VBox from './ui/VBox';
-import VolumeControl from './ui/VolumeControl';
-import WavePicker from './ui/WavePicker';
-import { getPitches } from './lib/pitch';
-import NoteTracker from './lib/notetracker';
-import { decrementOctave, incrementOctave } from './lib/octave';
-import FloatingNotes from './ui/FloatingNotes';
+import { ReactElement, useState } from "react";
+import { Rustle } from "./Rustle";
+import "./App.css"
 
-import { Synth } from './lib/synth';
-import Key from './ui/Key';
-
-interface KeyProps {
-  type: "note" | "unset" | "octave"
-  keyboard: string
-  note?: string
-  sharp?: boolean
+enum Nav {
+  Home,
+  Synth,
+  Recipes
 }
 
-function App() {
+export default function App() {
 
-  const noteTrackerRef = useRef(new NoteTracker())
+  const [nav, setNav] = useState(Nav.Home);
 
-  const [volume, setVolume] = useState(0.25)
-  const [wave, setWave] = useState<OscillatorType>("sine")
-  const [adsr, setADSR] = useState<ADSR>(new ADSR())
-  const [octave, setOctave] = useState(0)
-  const [keys, setKeys] = useState(new Map(zip(pianoKeys, getPitches(0))))
-
-  const [globals, setGlobals] = useState(new Globals())
-  const [synth] = useState(new Synth(globals, adsr))
-  const [player] = useState(new Player(noteTrackerRef.current))
-
-  const playKey = (note: string) => {
-    const freq = keys.get(note)
-    if (freq === undefined) return
-    const key = synth.createKey(freq, wave, volume)
-    player.play(key)
+  const body = (): ReactElement => {
+    switch (nav) {
+      case Nav.Home: return (
+        <div style={
+          {
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center"
+          }} >
+          <h1>Welcome to my cool Webpage, we have:</h1>
+          <ul style={{ fontSize: 28 }}>
+            <li onClick={() => setNav(Nav.Synth)}>
+              <span className="link">Toy Synth</span>
+            </li>
+            <li onClick={() => setNav(Nav.Recipes)}>
+              <span className="link">Recipes</span>
+            </li>
+            <li>
+              <span className="link">Fun, fun and more fun</span>
+            </li>
+          </ul>
+        </div >
+      )
+      case Nav.Recipes: return (
+        <div style={
+          {
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center"
+          }} >
+          <h2>Rezepte</h2>
+          <ul>
+            <h3>Chefkoch</h3>
+            <li><a href="https://www.chefkoch.de/rezepte/2319301369741654/Chana-Dal-Masala.html">Chana Dal Masala</a></li>
+            <li><a href="https://www.chefkoch.de/rezepte/837601188560864/Kartoffelgratin.html">Kartoffelgratin</a></li>
+            <li><a href="https://www.chefkoch.de/rezepte/1716851280413039/Einfacher-Zwiebelkuchen.html">Zwiebelkuchen</a></li>
+            <li><a href="https://www.chefkoch.de/rezepte/2114131340630587/Vegetarische-Spinat-Gemuese-Lasagne-mit-Tomatensosse.html">Spinat-Gemüselasagne</a></li>
+            <li><a href="https://www.chefkoch.de/rezepte/1810471293281955/Paprika-Reispfanne-mit-Joghurtsauce.html">Paprika Reispfanne</a></li>
+            <li><a href="https://www.chefkoch.de/rezepte/1841351298407440/Haferflocken-Kaese-Bratlinge.html">Haferflocken Käse Bratlinge</a></li>
+            <li><a href="https://www.chefkoch.de/rezepte/595441159189225/Chili-sin-Carne.html">Chili Sin Carne</a></li>
+            <li><a href="https://www.chefkoch.de/rezepte/3735491566893477/Rote-Linsen-Bolognese.html">Linsen Bolognese</a></li>
+            <li><a href="https://www.chefkoch.de/rezepte/2306671368023432/Tomaten-Mozzarella-Flammkuchen.html">Flammkuchen mit Kirschtomaten und Mozzarella</a></li>
+            <li><a href="https://www.chefkoch.de/rezepte/3412691508501546/Paella-mit-Meeresfruechten.html">Paella</a></li>
+            <h3>Sonstige</h3>
+            <li>Nudeln mit Lachs-Sahnesoße</li>
+            <li>Spaghetti Bolognese Vegetarisch</li>
+            <li>Selbstgemachte Pizza</li>
+            <li>Kartoffelecken im Ofen</li>
+            <li>Spinatknödel</li>
+            <li>Kapuska</li>
+            <li>Wurzelgemüse im Ofen</li>
+            <li>Pilzrisotto</li>
+          </ul>
+        </div>
+      )
+      case Nav.Synth: return (
+        <div>
+          <Rustle />
+        </div>
+      )
+    }
   }
-
-  const stopKey = (note: string) => {
-    const freq = keys.get(note)
-    if (freq === undefined) return
-    player.stop(freq, wave)
-  }
-
-  const doDecrementOctave = () => {
-    const next = decrementOctave(octave)
-    setOctave(next)
-    setKeys(new Map(zip(pianoKeys, getPitches(next))))
-  }
-
-  const doIncrementOctave = () => {
-    const next = incrementOctave(octave)
-    setOctave(next)
-    setKeys(new Map(zip(pianoKeys, getPitches(next))))
-  }
-
-  const mkRow = (row: KeyProps[]) => row.map(key => {
-
-    const note = key.keyboard.toLowerCase()
-
-    let mousedown = () => {
-      playKey(note)
-      createFloatingNote()
-    }
-    let mouseup = () => {
-      stopKey(note)
-
-    }
-    if (key.type == "octave" && key.keyboard == "Y") {
-      mousedown = () => {
-        doDecrementOctave()
-      }
-    }
-    if (key.type == "octave" && key.keyboard == "X") {
-      mousedown = () => {
-        doIncrementOctave()
-      }
-    }
-
-    return <Key
-      key={key.keyboard}
-      type={key.type}
-      note={key.note}
-      keyboardKey={key.keyboard}
-      sharp={key.sharp}
-      mousedown={mousedown}
-      mouseup={mouseup} />
-  })
-
-  const upperRow: KeyProps[] = [
-    { type: "unset", keyboard: "Q" },
-    { type: "note", keyboard: "W", note: "C", sharp: true },
-    { type: "note", keyboard: "E", note: "D", sharp: true },
-    { type: "unset", keyboard: "R" },
-    { type: "note", keyboard: "T", note: "F", sharp: true },
-    { type: "note", keyboard: "Z", note: "G", sharp: true },
-    { type: "note", keyboard: "U", note: "A", sharp: true },
-    { type: "unset", keyboard: "I" },
-    { type: "note", keyboard: "O", note: "C", sharp: true },
-    { type: "unset", keyboard: "P" },
-  ]
-
-  const middleRow: KeyProps[] = [
-    { type: "note", keyboard: "A", note: "C", },
-    { type: "note", keyboard: "S", note: "D", },
-    { type: "note", keyboard: "D", note: "E", },
-    { type: "note", keyboard: "F", note: "F", },
-    { type: "note", keyboard: "G", note: "G", },
-    { type: "note", keyboard: "H", note: "A", },
-    { type: "note", keyboard: "J", note: "B", },
-    { type: "note", keyboard: "K", note: "C", },
-    { type: "note", keyboard: "L", note: "D", },
-  ]
-
-  const bottomRow: KeyProps[] = [
-    { type: "octave", keyboard: "Y" },
-    { type: "octave", keyboard: "X" },
-    { type: "unset", keyboard: "C" },
-    { type: "unset", keyboard: "V" },
-    { type: "unset", keyboard: "B" },
-    { type: "unset", keyboard: "N" },
-    { type: "unset", keyboard: "M" },
-    { type: "unset", keyboard: "," },
-    { type: "unset", keyboard: "." },
-  ]
-
-  useEffect(() => {
-
-    async function handleKeyDown(ev: KeyboardEvent) {
-
-      if (ev.key === "x") {
-        doIncrementOctave()
-      }
-
-      if (ev.key === "y") {
-        doDecrementOctave()
-      }
-
-      else {
-        playKey(ev.key)
-      }
-    }
-
-    function handleKeyUp(ev: KeyboardEvent) {
-      stopKey(ev.key)
-    }
-
-    window.addEventListener("keydown", handleKeyDown)
-    window.addEventListener("keyup", handleKeyUp)
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown)
-      window.removeEventListener("keyup", handleKeyUp)
-    }
-
-  }, [octave, wave, adsr, keys, volume])
-
 
   return (
-    <div className="App">
-      <VBox margin="8px">
-        <Center>
-          <VolumeControl volume={volume} setVolume={setVolume} setGlobals={setGlobals} />
-        </Center>
-      </VBox>
-
-      <VBox margin="8px">
-        <Center>
-          <WavePicker currentWave={wave} setWave={setWave} />
-        </Center>
-      </VBox>
-
-      <VBox margin="8px">
-        <Center>
-          <ADSRControls adsr={adsr} setADSR={setADSR} />
-        </Center>
-      </VBox>
-
-      <Center>
-        <div className='mykey-row'>
-          {mkRow(upperRow)}
-        </div>
-      </Center>
-      <Center>
-        <div className='mykey-row'>
-          {mkRow(middleRow)}
-        </div>
-      </Center>
-      <Center>
-        <div className='mykey-row' style={{ paddingLeft: 32 }}>
-          {mkRow(bottomRow)}
-        </div>
-      </Center>
-
-      <FloatingNotes tracker={noteTrackerRef.current} wave={wave} keys={keys} />
-      <a
-        href="https://github.com/clpstar1/rustle"
-        target="_blank"
-        style={{ position: "absolute", left: "5%", bottom: "5%" }}
-      >Source</a>
-
-      <a
-        href="https://www.youtube.com/watch?v=ArJe--CGatg"
-        target="_blank"
-        style={{ position: "absolute", left: "85%", bottom: "5%" }}
-      >Image by Daniel Renard</a>
-
-    </div>
-  );
+    <>
+      <div onClick={() => setNav(Nav.Home)}
+        style={
+          {
+            display: "flex",
+            justifyContent: "space-around",
+            width: "100%",
+          }}
+        className="link"
+      >
+        <h1>Home</h1>
+      </div>
+      {body()}
+    </>
+  )
 }
-
-export default App;
